@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprints & Projects - Welding Simulator Wiki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steel: {
+                            dark: '#1a1a1a',
+                            DEFAULT: '#2d2d2d',
+                            light: '#3d3d3d'
+                        },
+                        weld: {
+                            orange: '#ff6b00',
+                            yellow: '#ff9500'
+                        },
+                        spark: '#ffd700'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: spark 1.5s infinite;
+            box-shadow: 0 0 10px #ff6b00, 0 0 20px #ff9500;
+        }
+
+        @keyframes spark {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+            50% { opacity: 1; transform: translateY(-20px) scale(1.5); }
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b00, #ffd700);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .blueprint-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .blueprint-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255,107,0,0.3);
+        }
+
+        .difficulty-bar {
+            height: 8px;
+            background: #3d3d3d;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .difficulty-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+<body class="min-h-screen text-gray-200">
+    <!-- Animated Sparks Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="spark" style="left: 12%; animation-delay: 0.3s;"></div>
+        <div class="spark" style="left: 28%; animation-delay: 0.7s;"></div>
+        <div class="spark" style="left: 42%; animation-delay: 0.2s;"></div>
+        <div class="spark" style="left: 58%; animation-delay: 0.5s;"></div>
+        <div class="spark" style="left: 72%; animation-delay: 0.9s;"></div>
+        <div class="spark" style="left: 88%; animation-delay: 0.4s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 bg-steel-dark/90 backdrop-blur-sm border-b border-steel-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-10 h-10 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                        <path d="M8 8v8M12 6v12M16 9v9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-2xl font-bold text-weld-orange tracking-wider" style="font-family: 'Oswald', sans-serif;">WELDING SIM</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-gray-400 hover:text-spark">Home</a>
+                    <a href="guide.html" class="nav-link text-gray-400 hover:text-spark">Guide</a>
+                    <a href="blueprints.html" class="nav-link text-spark font-medium">Blueprints</a>
+                    <a href="tips.html" class="nav-link text-gray-400 hover:text-spark">Tips</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-steel-dark py-16 px-4 border-b border-steel-light">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-5xl font-bold text-white mb-4">Blueprints & <span class="text-weld-orange">Projects</span></h1>
+            <p class="text-xl text-gray-400 max-w-3xl">Follow detailed blueprints to complete challenging welding projects from beginner to expert level.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Difficulty Legend -->
+            <div class="bg-steel-dark rounded-lg p-6 border border-steel-light mb-12">
+                <h3 class="text-lg font-semibold text-white mb-4">Difficulty Scale</h3>
+                <div class="difficulty-bar max-w-md mb-2">
+                    <div class="difficulty-fill" style="width: 100%;"></div>
+                </div>
+                <div class="flex justify-between text-sm text-gray-400">
+                    <span>Beginner</span>
+                    <span>Intermediate</span>
+                    <span>Expert</span>
+                </div>
+            </div>
+
+            <!-- Beginner Projects -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-green-500 mr-4"></span>
+                    Beginner Projects
+                </h2>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Project 1 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">▬</div>
+                            <h3 class="text-xl font-semibold text-white">Flat Bar Joint</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-green-500">Beginner</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 20%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Practice basic butt joints on flat bar stock. Learn proper gap spacing and travel speed.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">MIG</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">10 min</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">1/8" steel</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">L</div>
+                            <h3 class="text-xl font-semibold text-white">Corner Bracket</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-green-500">Beginner</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 25%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Create a 90-degree corner bracket. Practice angle positioning and tack welding.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">MIG/TIG</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">15 min</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">1/4" steel</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">O</div>
+                            <h3 class="text-xl font-semibold text-white">Ring Hoop</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-green-500">Beginner</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 30%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Weld a circular ring from flat bar. Practice consistent travel speed for uniform welds.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">MIG</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">20 min</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">3/16" steel</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Intermediate Projects -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-yellow-500 mr-4"></span>
+                    Intermediate Projects
+                </h2>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Project 4 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">H</div>
+                            <h3 class="text-xl font-semibold text-white">Tube Frame Section</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-yellow-500">Intermediate</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Build a rectangular frame using square tubing. Requires precise fit-up and multiple welds.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">MIG</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">45 min</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">1.5" tube</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 5 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">T</div>
+                            <h3 class="text-xl font-semibold text-white">Pipe Flange</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-yellow-500">Intermediate</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 55%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Weld a flange to pipe section. Uses TIG for precise, clean welds on round material.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">TIG</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">60 min</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">2" pipe</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 6 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">#</div>
+                            <h3 class="text-xl font-semibold text-white">Gate Section</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-yellow-500">Intermediate</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Create a decorative gate section with ornamental scrollwork. Combines multiple techniques.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">MIG/Stick</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">90 min</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">Mixed</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expert Projects -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-red-500 mr-4"></span>
+                    Expert Projects
+                </h2>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Project 7 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">⊓</div>
+                            <h3 class="text-xl font-semibold text-white">Structural Header</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-red-500">Expert</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Heavy structural beam with welded gussets. Requires multi-pass welding and proper penetration.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">Flux-Core</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">3 hrs</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">1/2" plate</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 8 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">⚙</div>
+                            <h3 class="text-xl font-semibold text-white">Aluminum Tank</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-red-500">Expert</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Weld a pressure vessel from aluminum plate. Requires precise TIG technique and leak-free welds.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">TIG</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">4 hrs</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">Aluminum</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project 9 -->
+                    <div class="blueprint-card bg-steel-dark rounded-lg overflow-hidden border border-steel-light">
+                        <div class="bg-steel p-4 border-b border-steel-light">
+                            <div class="text-4xl mb-2">⚡</div>
+                            <h3 class="text-xl font-semibold text-white">Custom Exhaust</h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-400">Difficulty</span>
+                                    <span class="text-red-500">Expert</span>
+                                </div>
+                                <div class="difficulty-bar">
+                                    <div class="difficulty-fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-4">Build a custom automotive exhaust with mandrel bends, flanges, and merge collectors.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">TIG/MIG</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">5 hrs</span>
+                                <span class="px-2 py-1 bg-steel-light rounded text-xs">Stainless</span>
+                            </div>
+                            <button class="w-full py-2 bg-weld-orange/20 text-weld-orange rounded hover:bg-weld-orange hover:text-white transition-colors">
+                                View Blueprint
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blueprint Tips -->
+            <section class="bg-steel-dark rounded-lg border border-steel-light p-8">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <svg class="w-6 h-6 text-weld-orange mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    Blueprint Reading Tips
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-weld-yellow mb-3">Understanding Dimensions</h3>
+                        <p class="text-gray-400 text-sm">Blueprints show measurements in inches. Note the scale indicator and check both overall dimensions and individual component sizes before starting.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-weld-yellow mb-3">Material Specifications</h3>
+                        <p class="text-gray-400 text-sm">Each blueprint lists material type and thickness. Using incorrect material will affect weldability and final product quality.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-weld-yellow mb-3">Weld Symbols</h3>
+                        <p class="text-gray-400 text-sm">Standard AWS weld symbols indicate weld type, size, and finish requirements. Reference the symbol key in each blueprint.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-weld-yellow mb-3">Inspection Points</h3>
+                        <p class="text-gray-400 text-sm">Critical welds are marked for inspection. These require minimum penetration and proper appearance standards to pass.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-steel-dark border-t border-steel-light py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-6 h-6 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                </svg>
+                <span class="text-weld-orange font-semibold">Welding Simulator Wiki</span>
+            </div>
+            <p class="text-gray-500 text-sm mb-2">Fan-made wiki site. Not affiliated with the official game developers.</p>
+            <p class="text-gray-600 text-xs">&copy; 2026 Welding Simulator Fan Community. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

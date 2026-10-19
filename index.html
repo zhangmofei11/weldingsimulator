@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welding Simulator - Official Wiki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steel: {
+                            dark: '#1a1a1a',
+                            DEFAULT: '#2d2d2d',
+                            light: '#3d3d3d'
+                        },
+                        weld: {
+                            orange: '#ff6b00',
+                            yellow: '#ff9500'
+                        },
+                        spark: '#ffd700'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: spark 1.5s infinite;
+            box-shadow: 0 0 10px #ff6b00, 0 0 20px #ff9500;
+        }
+
+        @keyframes spark {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+            50% { opacity: 1; transform: translateY(-20px) scale(1.5); }
+        }
+
+        .spark:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .spark:nth-child(2) { left: 20%; animation-delay: 0.3s; }
+        .spark:nth-child(3) { left: 35%; animation-delay: 0.6s; }
+        .spark:nth-child(4) { left: 50%; animation-delay: 0.2s; }
+        .spark:nth-child(5) { left: 65%; animation-delay: 0.5s; }
+        .spark:nth-child(6) { left: 80%; animation-delay: 0.1s; }
+        .spark:nth-child(7) { left: 90%; animation-delay: 0.4s; }
+
+        .weld-arc {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weld-arc::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,107,0,0.3) 0%, transparent 70%);
+            animation: arc-flicker 0.1s infinite alternate;
+        }
+
+        @keyframes arc-flicker {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .metal-texture {
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255,255,255,0.03) 2px,
+                    rgba(255,255,255,0.03) 4px
+                );
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b00, #ffd700);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .card-hover {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255,107,0,0.3);
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+<body class="min-h-screen text-gray-200">
+    <!-- Animated Sparks Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="spark"></div>
+        <div class="spark"></div>
+        <div class="spark"></div>
+        <div class="spark"></div>
+        <div class="spark"></div>
+        <div class="spark"></div>
+        <div class="spark"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 bg-steel-dark/90 backdrop-blur-sm border-b border-steel-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-10 h-10 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                        <path d="M8 8v8M12 6v12M16 9v9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-2xl font-bold text-weld-orange tracking-wider" style="font-family: 'Oswald', sans-serif;">WELDING SIM</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-spark font-medium">Home</a>
+                    <a href="guide.html" class="nav-link text-gray-400 hover:text-spark">Guide</a>
+                    <a href="blueprints.html" class="nav-link text-gray-400 hover:text-spark">Blueprints</a>
+                    <a href="tips.html" class="nav-link text-gray-400 hover:text-spark">Tips</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative z-10 weld-arc py-20 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
+                WELDING <span class="text-weld-orange">SIMULATOR</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                Master the art of welding in the most realistic virtual workshop experience. From basic MIG to advanced TIG, become a master welder.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#features" class="px-8 py-3 bg-weld-orange text-white font-semibold rounded hover:bg-weld-yellow transition-colors">
+                    Explore Features
+                </a>
+                <a href="guide.html" class="px-8 py-3 border-2 border-weld-orange text-weld-orange font-semibold rounded hover:bg-weld-orange hover:text-white transition-colors">
+                    Start Learning
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" class="relative z-10 py-20 px-4 metal-texture">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center text-white mb-4">Game Features</h2>
+            <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto">Experience immersive welding with realistic physics, multiple welding techniques, and challenging projects.</p>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card-hover bg-steel-dark rounded-lg p-6 border border-steel-light">
+                    <div class="w-14 h-14 bg-weld-orange/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Realistic Physics</h3>
+                    <p class="text-gray-400">Authentic heat distribution, metal behavior, and spark physics create an immersive welding experience.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card-hover bg-steel-dark rounded-lg p-6 border border-steel-light">
+                    <div class="w-14 h-14 bg-weld-orange/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Multiple Techniques</h3>
+                    <p class="text-gray-400">Master MIG, TIG, Stick, and Flux-Core welding. Each technique has unique properties and applications.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card-hover bg-steel-dark rounded-lg p-6 border border-steel-light">
+                    <div class="w-14 h-14 bg-weld-orange/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Blueprint Projects</h3>
+                    <p class="text-gray-400">Follow detailed blueprints to create real-world structures from gates to automotive parts.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="card-hover bg-steel-dark rounded-lg p-6 border border-steel-light">
+                    <div class="w-14 h-14 bg-weld-orange/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Skill Progression</h3>
+                    <p class="text-gray-400">Start as a beginner and progress through certifications to become a master welder.</p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="card-hover bg-steel-dark rounded-lg p-6 border border-steel-light">
+                    <div class="w-14 h-14 bg-weld-orange/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Real-time Feedback</h3>
+                    <p class="text-gray-400">Get instant feedback on your welds with heat maps and structural integrity analysis.</p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="card-hover bg-steel-dark rounded-lg p-6 border border-steel-light">
+                    <div class="w-14 h-14 bg-weld-orange/20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Safety Training</h3>
+                    <p class="text-gray-400">Learn proper safety protocols and PPE usage in a risk-free virtual environment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started Section -->
+    <section class="relative z-10 py-20 px-4 bg-steel-dark">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center text-white mb-4">Getting Started</h2>
+            <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto">New to welding? Follow these steps to begin your journey as a virtual welder.</p>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-weld-orange rounded-full flex items-center justify-center text-2xl font-bold text-white mb-4">1</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Choose Your Rig</h3>
+                    <p class="text-gray-400 text-sm">Select your welding machine and equipment for the job.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-weld-orange rounded-full flex items-center justify-center text-2xl font-bold text-white mb-4">2</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Study the Blueprint</h3>
+                    <p class="text-gray-400 text-sm">Review the project requirements and material specifications.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-weld-orange rounded-full flex items-center justify-center text-2xl font-bold text-white mb-4">3</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Set Up Position</h3>
+                    <p class="text-gray-400 text-sm">Position your torch and workpiece for optimal weld quality.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-weld-orange rounded-full flex items-center justify-center text-2xl font-bold text-white mb-4">4</div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Weld & Inspect</h3>
+                    <p class="text-gray-400 text-sm">Execute the weld and use inspection tools to check quality.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-steel-dark border-t border-steel-light py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-6 h-6 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                </svg>
+                <span class="text-weld-orange font-semibold">Welding Simulator Wiki</span>
+            </div>
+            <p class="text-gray-500 text-sm mb-2">Fan-made wiki site. Not affiliated with the official game developers.</p>
+            <p class="text-gray-600 text-xs">&copy; 2026 Welding Simulator Fan Community. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

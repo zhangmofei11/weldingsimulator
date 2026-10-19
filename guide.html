@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welding Guide - Welding Simulator Wiki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steel: {
+                            dark: '#1a1a1a',
+                            DEFAULT: '#2d2d2d',
+                            light: '#3d3d3d'
+                        },
+                        weld: {
+                            orange: '#ff6b00',
+                            yellow: '#ff9500'
+                        },
+                        spark: '#ffd700'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: spark 1.5s infinite;
+            box-shadow: 0 0 10px #ff6b00, 0 0 20px #ff9500;
+        }
+
+        @keyframes spark {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+            50% { opacity: 1; transform: translateY(-20px) scale(1.5); }
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b00, #ffd700);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .technique-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .technique-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255,107,0,0.3);
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+<body class="min-h-screen text-gray-200">
+    <!-- Animated Sparks Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="spark" style="left: 15%; animation-delay: 0.2s;"></div>
+        <div class="spark" style="left: 30%; animation-delay: 0.5s;"></div>
+        <div class="spark" style="left: 45%; animation-delay: 0.1s;"></div>
+        <div class="spark" style="left: 60%; animation-delay: 0.7s;"></div>
+        <div class="spark" style="left: 75%; animation-delay: 0.3s;"></div>
+        <div class="spark" style="left: 85%; animation-delay: 0.6s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 bg-steel-dark/90 backdrop-blur-sm border-b border-steel-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-10 h-10 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                        <path d="M8 8v8M12 6v12M16 9v9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-2xl font-bold text-weld-orange tracking-wider" style="font-family: 'Oswald', sans-serif;">WELDING SIM</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-gray-400 hover:text-spark">Home</a>
+                    <a href="guide.html" class="nav-link text-spark font-medium">Guide</a>
+                    <a href="blueprints.html" class="nav-link text-gray-400 hover:text-spark">Blueprints</a>
+                    <a href="tips.html" class="nav-link text-gray-400 hover:text-spark">Tips</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-steel-dark py-16 px-4 border-b border-steel-light">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-5xl font-bold text-white mb-4">Welding <span class="text-weld-orange">Guide</span></h1>
+            <p class="text-xl text-gray-400 max-w-3xl">Master the fundamentals of welding with our comprehensive techniques and tips guide.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Welding Techniques -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Welding Techniques
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- MIG Welding -->
+                    <div class="technique-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-weld-orange/20 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-white">MIG Welding</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Metal Inert Gas welding is the most beginner-friendly technique. Uses a continuous wire electrode and shielding gas.</p>
+                        <div class="bg-steel rounded p-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Best For:</h4>
+                            <ul class="text-gray-300 text-sm space-y-1">
+                                <li>Steel and stainless steel</li>
+                                <li>Thin to medium thickness metals</li>
+                                <li>Indoor projects</li>
+                                <li>Quick, clean welds</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Settings:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Voltage: 18-22V</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Wire Speed: 150-300 IPM</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Gas: 75% Ar / 25% CO2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TIG Welding -->
+                    <div class="technique-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-weld-orange/20 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-white">TIG Welding</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Tungsten Inert Gas welding offers precision and quality. Uses a non-consumable tungsten electrode.</p>
+                        <div class="bg-steel rounded p-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Best For:</h4>
+                            <ul class="text-gray-300 text-sm space-y-1">
+                                <li>Aluminum and stainless steel</li>
+                                <li>Thin materials</li>
+                                <li>Aesthetic welds</li>
+                                <li>Precision work</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Settings:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Amps: 80-150A</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Gas: 100% Argon</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Balance: 70-80%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stick Welding -->
+                    <div class="technique-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-weld-orange/20 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-white">Stick Welding (SMAW)</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Shielded Metal Arc Welding is versatile and works outdoors. Uses consumable flux-coated electrodes.</p>
+                        <div class="bg-steel rounded p-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Best For:</h4>
+                            <ul class="text-gray-300 text-sm space-y-1">
+                                <li>Outdoor and field work</li>
+                                <li>Rusty or dirty metals</li>
+                                <li>Thick materials</li>
+                                <li>Windy conditions</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Settings:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Amps: 100-180A</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Electrode: 6011/7018</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">DC+ or AC</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flux-Core Welding -->
+                    <div class="technique-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-weld-orange/20 rounded-lg flex items-center justify-center mr-4">
+                                <svg class="w-6 h-6 text-weld-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-white">Flux-Core (FCAW)</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Flux-Core Arc Welding uses tubular wire with flux. Great penetration and works on thick metals.</p>
+                        <div class="bg-steel rounded p-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Best For:</h4>
+                            <ul class="text-gray-300 text-sm space-y-1">
+                                <li>Heavy structural steel</li>
+                                <li>Thick plate welding</li>
+                                <li>Outdoor fabrication</li>
+                                <li>Deep penetration needs</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <h4 class="text-weld-yellow font-semibold mb-2">Settings:</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Voltage: 20-25V</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Wire Speed: 200-350 IPM</span>
+                                <span class="px-3 py-1 bg-steel-light rounded text-sm">Shielding: Self-guarded</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Basic Techniques -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Basic Techniques
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-weld-orange mb-3">Push vs. Pull</h3>
+                        <p class="text-gray-400 mb-4">The angle of your torch affects weld penetration and appearance. Push technique provides better visibility, while pull technique offers deeper penetration.</p>
+                        <div class="flex gap-4">
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-steel-light rounded-full flex items-center justify-center mb-2">
+                                    <svg class="w-6 h-6 text-spark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-gray-400">Push</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-steel-light rounded-full flex items-center justify-center mb-2">
+                                    <svg class="w-6 h-6 text-spark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-gray-400">Pull</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-weld-orange mb-3">Travel Speed</h3>
+                        <p class="text-gray-400 mb-4">Too fast creates a thin, weak weld. Too slow creates excessive heat and burn-through. Maintain consistent speed for uniform bead appearance.</p>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-2 bg-steel-light rounded">
+                                <div class="h-full bg-weld-orange rounded" style="width: 60%;"></div>
+                            </div>
+                            <span class="text-sm text-spark">Optimal</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-weld-orange mb-3">Electrode Angle</h3>
+                        <p class="text-gray-400 mb-4">For flat position, maintain 15-20 degrees from vertical. Adjust angle based on joint type and material thickness.</p>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-weld-orange">15-20°</div>
+                            <span class="text-sm text-gray-400">from vertical</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Joint Types -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Common Joint Types
+                </h2>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-steel-dark rounded-lg p-4 border border-steel-light text-center">
+                        <div class="text-5xl mb-3 text-gray-500">┌─┐</div>
+                        <h3 class="text-lg font-semibold text-white">Butt Joint</h3>
+                        <p class="text-gray-400 text-sm">Two pieces butted together edge-to-edge</p>
+                    </div>
+                    <div class="bg-steel-dark rounded-lg p-4 border border-steel-light text-center">
+                        <div class="text-5xl mb-3 text-gray-500">├┤</div>
+                        <h3 class="text-lg font-semibold text-white">T-Joint</h3>
+                        <p class="text-gray-400 text-sm">One piece perpendicular to another</p>
+                    </div>
+                    <div class="bg-steel-dark rounded-lg p-4 border border-steel-light text-center">
+                        <div class="text-5xl mb-3 text-gray-500">L</div>
+                        <h3 class="text-lg font-semibold text-white">Lap Joint</h3>
+                        <p class="text-gray-400 text-sm">Overlapping pieces at 90 degrees</p>
+                    </div>
+                    <div class="bg-steel-dark rounded-lg p-4 border border-steel-light text-center">
+                        <div class="text-5xl mb-3 text-gray-500">⊔</div>
+                        <h3 class="text-lg font-semibold text-white">Corner Joint</h3>
+                        <p class="text-gray-400 text-sm">Two pieces forming an L-shape</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section>
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Common Problems & Solutions
+                </h2>
+
+                <div class="bg-steel-dark rounded-lg border border-steel-light overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-steel">
+                            <tr>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Problem</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Cause</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Solution</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-steel-light">
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Porosity (pitting)</td>
+                                <td class="py-4 px-6 text-gray-400">Contamination, moisture, inadequate gas coverage</td>
+                                <td class="py-4 px-6 text-gray-400">Clean base metal, check gas flow, increase gas coverage</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Incomplete Fusion</td>
+                                <td class="py-4 px-6 text-gray-400">Low heat, wrong angle, travel too fast</td>
+                                <td class="py-4 px-6 text-gray-400">Increase voltage/wire speed, adjust angle, slow down</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Burn-through</td>
+                                <td class="py-4 px-6 text-gray-400">Excessive heat, thin material</td>
+                                <td class="py-4 px-6 text-gray-400">Reduce settings, increase travel speed, use backing bar</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Excessive Spatter</td>
+                                <td class="py-4 px-6 text-gray-400">Voltage too high, contaminated wire/metal</td>
+                                <td class="py-4 px-6 text-gray-400">Lower voltage, clean wire and base metal</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Uneven Bead</td>
+                                <td class="py-4 px-6 text-gray-400">Inconsistent travel speed, torch wobble</td>
+                                <td class="py-4 px-6 text-gray-400">Practice consistent movement, use two-hand technique</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-steel-dark border-t border-steel-light py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-6 h-6 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                </svg>
+                <span class="text-weld-orange font-semibold">Welding Simulator Wiki</span>
+            </div>
+            <p class="text-gray-500 text-sm mb-2">Fan-made wiki site. Not affiliated with the official game developers.</p>
+            <p class="text-gray-600 text-xs">&copy; 2026 Welding Simulator Fan Community. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
