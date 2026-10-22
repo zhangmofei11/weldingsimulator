@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Welding Pro Tips and Tricks - Welding Simulator Wiki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steel: {
+                            dark: '#1a1a1a',
+                            DEFAULT: '#2d2d2d',
+                            light: '#3d3d3d'
+                        },
+                        weld: {
+                            orange: '#ff6b00',
+                            yellow: '#ff9500'
+                        },
+                        spark: '#ffd700'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: spark 1.5s infinite;
+            box-shadow: 0 0 10px #ff6b00, 0 0 20px #ff9500;
+        }
+
+        @keyframes spark {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+            50% { opacity: 1; transform: translateY(-20px) scale(1.5); }
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b00, #ffd700);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .tip-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tip-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255,107,0,0.2);
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EYCMSNRFH7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-EYCMSNRFH7');
+    </script>
+    <meta name="description" content="Advanced welding pro tips for Welding Simulator: joint preparation, heat and distortion control, amperage trade-offs and quality scoring tricks.">
+    <meta name="keywords" content="Welding Simulator advanced tips, welding tricks, heat control welding, distortion control, weld quality scoring">
+    <link rel="canonical" href="https://weldingsimulator.site/pro-tips.html">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "WebSite", "@id": "https://weldingsimulator.site/#website", "name": "Welding Simulator", "url": "https://weldingsimulator.site/", "inLanguage": "en" },
+        { "@type": "WebPage", "@id": "https://weldingsimulator.site/#webpage", "url": "https://weldingsimulator.site/pro-tips.html", "name": "Advanced Welding Pro Tips and Tricks", "description": "Advanced welding pro tips for Welding Simulator: joint preparation, heat and distortion control, amperage trade-offs and quality scoring tricks.", "isPartOf": { "@id": "https://weldingsimulator.site/#website" }, "breadcrumb": { "@id": "https://weldingsimulator.site/#breadcrumb" }, "inLanguage": "en" },
+        { "@type": "BreadcrumbList", "@id": "https://weldingsimulator.site/#breadcrumb", "itemListElement": [ { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://weldingsimulator.site/" } ] }
+      ]
+    }
+    </script>
+</head>
+<body class="min-h-screen text-gray-200">
+    <!-- Animated Sparks Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="spark" style="left: 14%; animation-delay: 0.25s;"></div>
+        <div class="spark" style="left: 30%; animation-delay: 0.55s;"></div>
+        <div class="spark" style="left: 46%; animation-delay: 0.15s;"></div>
+        <div class="spark" style="left: 60%; animation-delay: 0.65s;"></div>
+        <div class="spark" style="left: 74%; animation-delay: 0.35s;"></div>
+        <div class="spark" style="left: 88%; animation-delay: 0.75s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 bg-steel-dark/90 backdrop-blur-sm border-b border-steel-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-10 h-10 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                        <path d="M8 8v8M12 6v12M16 9v9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-2xl font-bold text-weld-orange tracking-wider" style="font-family: 'Oswald', sans-serif;">WELDING SIM</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-gray-400 hover:text-spark">Home</a>
+                    <a href="guide.html" class="nav-link text-gray-400 hover:text-spark">Guide</a>
+                    <a href="blueprints.html" class="nav-link text-gray-400 hover:text-spark">Blueprints</a>
+                    <a href="tips.html" class="nav-link text-gray-400 hover:text-spark">Tips</a>
+                    <a href="pro-tips.html" class="nav-link text-spark font-medium">Pro Tips</a>
+                    <a href="walkthrough.html" class="nav-link text-gray-400 hover:text-spark">Walkthrough</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-steel-dark py-16 px-4 border-b border-steel-light">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-5xl font-bold text-white mb-4">Advanced <span class="text-weld-orange">Pro Tips</span> &amp; Tricks</h1>
+            <p class="text-xl text-gray-400 max-w-3xl">The techniques that separate a passable weld from a scored weld: joint preparation, heat budgeting, distortion control and read-the-arc habits.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Joint Preparation -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Joint Preparation: Where the Score Is Won
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="tip-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Root Gap Control</h3>
+                        <p class="text-gray-400 text-sm">For butt joints, a root gap of roughly 1/16" on 1/8" stock is the sweet spot. Too tight and the puddle has nowhere to go, giving a cold, high bead with no root fusion. Too wide and the arc sprays the gap instead of bridging it, producing a hollow centre and heavy spatter.</p>
+                    </div>
+                    <div class="tip-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Tack Order &amp; Fit-Up</h3>
+                        <p class="text-gray-400 text-sm">Tack in a deliberate order, not randomly around the joint. Start at the ends, work back to the middle, and leave the final gap between tacks slightly larger than the centre of the joint. The workpiece then pulls into alignment as it cools instead of bowing out of square.</p>
+                    </div>
+                    <div class="tip-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Edge Prep &amp; Clean-Up</h3>
+                        <p class="text-gray-400 text-sm">On 1/4" plate and heavier, break the edge with a grinder before welding. A bevel widens the joint surface, so the same amperage spreads less heat into a wider area, improving penetration and cutting distortion. Grind back oxide, mill scale and paint near the joint.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Joint technique table -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Advanced Technique by Joint Type
+                </h2>
+
+                <div class="bg-steel-dark rounded-lg border border-steel-light overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-steel">
+                            <tr>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Joint</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Technique</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Key Setting</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Advanced Trick</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-steel-light">
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Butt</td>
+                                <td class="py-4 px-6 text-gray-400">MIG</td>
+                                <td class="py-4 px-6 text-gray-400">19-20V, 200-250 IPM</td>
+                                <td class="py-4 px-6 text-gray-400">Push slightly downhill so gravity feeds the puddle into the root.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">T-Joint</td>
+                                <td class="py-4 px-6 text-gray-400">MIG / FCAW</td>
+                                <td class="py-4 px-6 text-gray-400">20-25V, 200-350 IPM</td>
+                                <td class="py-4 px-6 text-gray-400">Aim at the corner and pause before each side so the puddle freezes into the fillet.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Lap</td>
+                                <td class="py-4 px-6 text-gray-400">MIG</td>
+                                <td class="py-4 px-6 text-gray-400">18-19V, 180-220 IPM</td>
+                                <td class="py-4 px-6 text-gray-400">Use the pull angle for penetration, then lift the torch slightly at the toe to avoid undercut.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Corner</td>
+                                <td class="py-4 px-6 text-gray-400">TIG</td>
+                                <td class="py-4 px-6 text-gray-400">80-120A, 100% argon</td>
+                                <td class="py-4 px-6 text-gray-400">Hold the arc at roughly one tungsten diameter, and fade the bead out with the foot pedal.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Pipe / Round</td>
+                                <td class="py-4 px-6 text-gray-400">TIG</td>
+                                <td class="py-4 px-6 text-gray-400">90-150A, balance 70-80%</td>
+                                <td class="py-4 px-6 text-gray-400">Work in overlapping passes around the circumference, each starting at the last crater.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Heavy Plate</td>
+                                <td class="py-4 px-6 text-gray-400">FCAW / Stick</td>
+                                <td class="py-4 px-6 text-gray-400">20-25V or 100-180A</td>
+                                <td class="py-4 px-6 text-gray-400">Fill the gap with a hot root pass, then cap it with a slower, cooler stringer pass.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Heat control -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Heat Control &amp; Distortion Management
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-weld-orange mb-3">Amperage vs. Speed Trade-Off</h3>
+                        <p class="text-gray-400 text-sm">Amperage and travel speed are two dials on one control: heat input. Raise amperage and you must travel faster, or the puddle pools, slumps the bead and eventually burns through. Drop amperage and slow down and you get a cold puddle that will not wet out the edges. Change one variable at a time: trim amperage by about 10 percent first, then give that change a full pass to read the result.</p>
+                    </div>
+                    <div class="bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-weld-orange mb-3">Distortion Control</h3>
+                        <p class="text-gray-400 text-sm">Distortion is shrinkage pulled in one direction, so control it by controlling where the heat goes. Weld from the fixed point outward to the free end, so the shrinking side is the side free to move. On long seams use the back-step method: weld a short length, step back over it, then continue forward. Tacking every 2-3 inches stops pieces drifting mid-weld, and a backing bar prevents burn-through.</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="tip-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Heat Sinking</h3>
+                        <p class="text-gray-400 text-sm">Clamp copper or scrap plate behind the joint to pull heat away. It is the cheapest way to stop burn-through and keeps the root from dropping.</p>
+                    </div>
+                    <div class="tip-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Crater Filling</h3>
+                        <p class="text-gray-400 text-sm">Every weld ends with a crater, and a crater is a crack waiting to happen. On MIG, feed a little extra wire after you stop travel to fill it. On TIG, ease the pedal down rather than cutting the arc.</p>
+                    </div>
+                    <div class="tip-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Interpass Cleaning</h3>
+                        <p class="text-gray-400 text-sm">Between passes on multi-pass work, chip the slag and grind out spatter before restarting. A pass laid over dirty spatter cannot fuse cleanly, however good your settings are.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scoring -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    How the Quality System Rewards Clean Beads
+                </h2>
+
+                <div class="bg-steel-dark rounded-lg p-8 border border-steel-light">
+                    <p class="text-gray-400 mb-6">The inspection tools described on the main site measure more than pass or fail. Consistent, narrow, well-fused beads score best, and every penalty comes from a specific mistake:</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="text-weld-orange mr-3">•</span><span class="text-gray-300"><strong class="text-white">Uniformity of bead width.</strong> A steady travel speed across the whole length matters more than one perfect inch. Slow or fast spots read as defects even when penetration is fine.</span></li>
+                        <li class="flex items-start"><span class="text-weld-orange mr-3">•</span><span class="text-gray-300"><strong class="text-white">Penetration at the root.</strong> A cold root pulls down the structural score even when the cap looks clean, so prioritise root fusion over a pretty surface.</span></li>
+                        <li class="flex items-start"><span class="text-weld-orange mr-3">•</span><span class="text-gray-300"><strong class="text-white">Absence of spatter and undercut.</strong> Spatter comes from too much voltage or a dirty gun; undercut comes from dragging the arc too long along the toe of the joint.</span></li>
+                        <li class="flex items-start"><span class="text-weld-orange mr-3">•</span><span class="text-gray-300"><strong class="text-white">Tie-in quality.</strong> Where you start and stop the arc is inspected. Start with a clean strike on the leading edge and finish with a filled crater.</span></li>
+                        <li class="flex items-start"><span class="text-weld-orange mr-3">•</span><span class="text-gray-300"><strong class="text-white">Heat map results.</strong> Overheated zones and burn-through show up on the heat map. Lower the amperage or speed up rather than adding a second pass over the same spot.</span></li>
+                        <li class="flex items-start"><span class="text-weld-orange mr-3">•</span><span class="text-gray-300"><strong class="text-white">Blueprint compliance.</strong> Dimensions, material and marked inspection points are checked against the drawing. Welding thicker material than the blueprint calls for will not score, however clean the weld.</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Failure modes -->
+            <section>
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Advanced Failure Modes and Fixes
+                </h2>
+
+                <div class="bg-steel-dark rounded-lg border border-steel-light overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-steel">
+                            <tr>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Symptom</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Hidden Cause</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Advanced Fix</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-steel-light">
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Bead ripples like a fish scale</td>
+                                <td class="py-4 px-6 text-gray-400">Weld too cold, or travel slightly too fast for the amperage</td>
+                                <td class="py-4 px-6 text-gray-400">Raise wire speed 10 percent, slow travel slightly</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Bead sits on top, no fusion</td>
+                                <td class="py-4 px-6 text-gray-400">Torch angle too vertical, or the arc was dragged</td>
+                                <td class="py-4 px-6 text-gray-400">Drop the work angle, hold a steady arc length</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Wide, flat, dull bead</td>
+                                <td class="py-4 px-6 text-gray-400">Voltage too low for the feed speed</td>
+                                <td class="py-4 px-6 text-gray-400">Add 1-2V and shorten stick-out to 1/4-3/8 inch</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Narrow, tall, spiky bead</td>
+                                <td class="py-4 px-6 text-gray-400">Wire feed too high for the voltage</td>
+                                <td class="py-4 px-6 text-gray-400">Trim the wire speed, let the arc length grow slightly</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Root drops through on thin plate</td>
+                                <td class="py-4 px-6 text-gray-400">Too much heat into a small pool</td>
+                                <td class="py-4 px-6 text-gray-400">Back-step the seam, add a backing bar, use stringer passes</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Arc unstable, wanders off the joint</td>
+                                <td class="py-4 px-6 text-gray-400">Stick-out too long, or a dirty tip</td>
+                                <td class="py-4 px-6 text-gray-400">Clean the tip, reset stick-out, check the gas diffuser</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Adsterra Ads -->
+    <script async="async" data-cfasync="false" src="https://bauval.org/21/8d54961aac2526a8459397dbfc3a932f"></script>
+    <div id="container-8d54961aac2526a8459397dbfc3a932f"></div>
+
+    <script data-cfasync="false" src="https://bauval.org/14/38c7314523b6803395865ad48015c645"></script>
+
+    <script>
+      atOptions = {
+        'key' : '4986cbea18d4d7400fe2a48ccb06a215',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script src="https://bauval.org/22/4986cbea18d4d7400fe2a48ccb06a215"></script>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-steel-dark border-t border-steel-light py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-6 h-6 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                </svg>
+                <span class="text-weld-orange font-semibold">Welding Simulator Wiki</span>
+            </div>
+            <p class="text-gray-500 text-sm mb-2">Fan-made wiki site. Not affiliated with the official game developers.</p>
+            <p class="text-gray-600 text-xs">&copy; 2026 Welding Simulator Fan Community. All rights reserved.</p>
+        </div>
+
+    <!-- Related Articles -->
+    <section class="max-w-4xl mx-auto py-8 px-4 border-t border-amber-900">
+        <h3 class="text-xl font-bold mb-4 text-white">You Might Also Like</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+        <a href="guide.html" class="block p-4 bg-amber-900/30 border-amber-900 rounded hover:bg-amber-800/30 transition">
+            <span class="font-semibold text-gray-300">→ Welding Guide - Welding Simulator Wiki</span>
+        </a>
+        <a href="tips.html" class="block p-4 bg-amber-900/30 border-amber-900 rounded hover:bg-amber-800/30 transition">
+            <span class="font-semibold text-gray-300">→ Pro Tips & Safety - Welding Simulator Wiki</span>
+        </a>
+        <a href="walkthrough.html" class="block p-4 bg-amber-900/30 border-amber-900 rounded hover:bg-amber-800/30 transition">
+            <span class="font-semibold text-gray-300">→ Walkthrough - Welding Simulator Wiki</span>
+        </a>
+        </div>
+    </section>
+</footer>
+</body>
+</html>

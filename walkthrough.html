@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welding Simulator Walkthrough - Beginner to Pro Progression Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steel: {
+                            dark: '#1a1a1a',
+                            DEFAULT: '#2d2d2d',
+                            light: '#3d3d3d'
+                        },
+                        weld: {
+                            orange: '#ff6b00',
+                            yellow: '#ff9500'
+                        },
+                        spark: '#ffd700'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: spark 1.5s infinite;
+            box-shadow: 0 0 10px #ff6b00, 0 0 20px #ff9500;
+        }
+
+        @keyframes spark {
+            0%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+            50% { opacity: 1; transform: translateY(-20px) scale(1.5); }
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b00, #ffd700);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .step-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255,107,0,0.2);
+        }
+
+        .tier-bar {
+            height: 8px;
+            background: #3d3d3d;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .tier-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #22c55e, #eab308, #ef4444);
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EYCMSNRFH7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-EYCMSNRFH7');
+    </script>
+    <meta name="description" content="Welding Simulator walkthrough and progression guide: shop setup, certification tiers, blueprint routing order and step-by-step first weld instructions.">
+    <meta name="keywords" content="Welding Simulator walkthrough, welding simulator beginner guide, welding progression, how to play welding simulator, certification">
+    <link rel="canonical" href="https://weldingsimulator.site/walkthrough.html">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "WebSite", "@id": "https://weldingsimulator.site/#website", "name": "Welding Simulator", "url": "https://weldingsimulator.site/", "inLanguage": "en" },
+        { "@type": "WebPage", "@id": "https://weldingsimulator.site/#webpage", "url": "https://weldingsimulator.site/walkthrough.html", "name": "Welding Simulator Walkthrough - Beginner to Pro Progression Guide", "description": "Welding Simulator walkthrough and progression guide: shop setup, certification tiers, blueprint routing order and step-by-step first weld instructions.", "isPartOf": { "@id": "https://weldingsimulator.site/#website" }, "breadcrumb": { "@id": "https://weldingsimulator.site/#breadcrumb" }, "inLanguage": "en" },
+        { "@type": "BreadcrumbList", "@id": "https://weldingsimulator.site/#breadcrumb", "itemListElement": [ { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://weldingsimulator.site/" } ] }
+      ]
+    }
+    </script>
+</head>
+<body class="min-h-screen text-gray-200">
+    <!-- Animated Sparks Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="spark" style="left: 16%; animation-delay: 0.35s;"></div>
+        <div class="spark" style="left: 34%; animation-delay: 0.05s;"></div>
+        <div class="spark" style="left: 50%; animation-delay: 0.5s;"></div>
+        <div class="spark" style="left: 66%; animation-delay: 0.25s;"></div>
+        <div class="spark" style="left: 82%; animation-delay: 0.7s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 bg-steel-dark/90 backdrop-blur-sm border-b border-steel-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-10 h-10 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                        <path d="M8 8v8M12 6v12M16 9v9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="text-2xl font-bold text-weld-orange tracking-wider" style="font-family: 'Oswald', sans-serif;">WELDING SIM</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link text-gray-400 hover:text-spark">Home</a>
+                    <a href="guide.html" class="nav-link text-gray-400 hover:text-spark">Guide</a>
+                    <a href="blueprints.html" class="nav-link text-gray-400 hover:text-spark">Blueprints</a>
+                    <a href="tips.html" class="nav-link text-gray-400 hover:text-spark">Tips</a>
+                    <a href="pro-tips.html" class="nav-link text-gray-400 hover:text-spark">Pro Tips</a>
+                    <a href="walkthrough.html" class="nav-link text-spark font-medium">Walkthrough</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-steel-dark py-16 px-4 border-b border-steel-light">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-5xl font-bold text-white mb-4">Welding Simulator <span class="text-weld-orange">Walkthrough</span></h1>
+            <p class="text-xl text-gray-400 max-w-3xl">A full progression route, from opening the shop for the first time to passing the expert blueprints with clean, repeatable beads.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Stage 1 -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-green-500 mr-4"></span>
+                    Stage 1: Set Up the Workshop
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Start on MIG</h3>
+                        <p class="text-gray-400 text-sm">The MIG machine is the most forgiving rig in the game: continuous wire feed, built-in shielding gas and no foot pedal to manage. Learn the whole loop on MIG before you split your attention between processes.</p>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Gear Up Before Arc Strike</h3>
+                        <p class="text-gray-400 text-sm">Helmet, jacket, gloves and boots come before the torch. The safety training is part of progression, not flavour, and having the PPE on stops you losing time to fixes mid-job.</p>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-lg font-semibold text-white mb-2">Read the Whole Blueprint</h3>
+                        <p class="text-gray-400 text-sm">Check material type, thickness, dimensions and the marked inspection points before touching the controls. Material and thickness decide your settings; the inspection points decide where the score is won.</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mt-8">
+                    <div class="bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-weld-orange mb-3">Your First Week in the Shop</h3>
+                        <p class="text-gray-400 text-sm">Spend the first sessions repeating one joint type until your hand, not your head, is doing the work. Keep a note of the settings that produced a clean bead, because a welder who writes down 19V and 220 IPM welds the same part identically tomorrow, while one working from memory guesses.</p>
+                    </div>
+                    <div class="bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-weld-orange mb-3">Learn One Machine Deeply</h3>
+                        <p class="text-gray-400 text-sm">Every rig has its own personality, and settings that worked on MIG will not transfer directly to TIG or Stick. Learn how the machine responds when you trigger and how the arc sounds at each end of its range. When you do change process, expect a fresh calibration period rather than a smooth transition.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Certification tiers -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Certification Tiers and What Each One Tests
+                </h2>
+
+                <div class="bg-steel-dark rounded-lg border border-steel-light p-6 mb-8">
+                    <div class="tier-bar max-w-md mb-2">
+                        <div class="tier-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-400">
+                        <span>Apprentice</span>
+                        <span>Journeyman</span>
+                        <span>Master Welder</span>
+                    </div>
+                </div>
+
+                <p class="text-gray-400 mb-8">The tiers below are a route through the blueprint list rather than a wall. Each one unlocks new machines and new materials, and every tier assumes the habits of the one below it. Pass a tier by completing its project twice: once to learn it, and once to prove you can repeat it on the same settings.</p>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-green-500 mb-3">Apprentice</h3>
+                        <ul class="text-gray-400 text-sm space-y-2">
+                            <li>Flat bar butt joints in mild steel</li>
+                            <li>Consistent travel speed on one axis</li>
+                            <li>Clean metal, correct gap, no burn-through</li>
+                            <li>Reads the puddle correctly</li>
+                        </ul>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-yellow-500 mb-3">Journeyman</h3>
+                        <ul class="text-gray-400 text-sm space-y-2">
+                            <li>Tubes, pipe and multi-piece assemblies</li>
+                            <li>Fit-up and tack placement that holds</li>
+                            <li>Second process: TIG or Stick</li>
+                            <li>No undercut or excessive spatter</li>
+                        </ul>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <h3 class="text-xl font-semibold text-red-500 mb-3">Master Welder</h3>
+                        <ul class="text-gray-400 text-sm space-y-2">
+                            <li>Multi-pass heavy plate in Flux-Core</li>
+                            <li>Aluminium and stainless TIG work</li>
+                            <li>Distortion controlled by weld sequence</li>
+                            <li>Inspection points pass without rework</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blueprint routing -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Blueprint Routing: Which Project Comes Next
+                </h2>
+
+                <div class="bg-steel-dark rounded-lg border border-steel-light overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-steel">
+                            <tr>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Order</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Blueprint</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Process</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">What It Teaches</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-steel-light">
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">1</td>
+                                <td class="py-4 px-6 text-gray-400">Flat Bar Joint (1/8" steel)</td>
+                                <td class="py-4 px-6 text-gray-400">MIG</td>
+                                <td class="py-4 px-6 text-gray-400">Gap spacing and a steady straight travel speed</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">2</td>
+                                <td class="py-4 px-6 text-gray-400">Corner Bracket (1/4" steel)</td>
+                                <td class="py-4 px-6 text-gray-400">MIG / TIG</td>
+                                <td class="py-4 px-6 text-gray-400">Angle positioning and a sensible tack pattern</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">3</td>
+                                <td class="py-4 px-6 text-gray-400">Ring Hoop (3/16" steel)</td>
+                                <td class="py-4 px-6 text-gray-400">MIG</td>
+                                <td class="py-4 px-6 text-gray-400">Curved travel and the arc that keeps up with a circle</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">4</td>
+                                <td class="py-4 px-6 text-gray-400">Tube Frame Section (1.5" tube)</td>
+                                <td class="py-4 px-6 text-gray-400">MIG</td>
+                                <td class="py-4 px-6 text-gray-400">Precise fit-up across multiple welds</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">5</td>
+                                <td class="py-4 px-6 text-gray-400">Pipe Flange (2" pipe)</td>
+                                <td class="py-4 px-6 text-gray-400">TIG</td>
+                                <td class="py-4 px-6 text-gray-400">Round work, crater control and pedal control</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">6</td>
+                                <td class="py-4 px-6 text-gray-400">Gate Section (mixed)</td>
+                                <td class="py-4 px-6 text-gray-400">MIG / Stick</td>
+                                <td class="py-4 px-6 text-gray-400">Combining processes on thin decorative work</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">7</td>
+                                <td class="py-4 px-6 text-gray-400">Structural Header (1/2" plate)</td>
+                                <td class="py-4 px-6 text-gray-400">Flux-Core</td>
+                                <td class="py-4 px-6 text-gray-400">Multi-pass sequencing on heavy plate</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">8</td>
+                                <td class="py-4 px-6 text-gray-400">Aluminum Tank (aluminium)</td>
+                                <td class="py-4 px-6 text-gray-400">TIG</td>
+                                <td class="py-4 px-6 text-gray-400">Heat control on a leak-sensitive build</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">9</td>
+                                <td class="py-4 px-6 text-gray-400">Custom Exhaust (stainless)</td>
+                                <td class="py-4 px-6 text-gray-400">TIG / MIG</td>
+                                <td class="py-4 px-6 text-gray-400">Flanges, bends and merge collectors</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- First weld -->
+            <section class="mb-16">
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Your First Weld, Step by Step
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-spark/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-spark font-bold">1</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white mb-2">Prepare the Joint</h3>
+                                <p class="text-gray-400 text-sm">Clean both faces back about an inch with a wire brush, then set the gap between the plates. Clamp or tack the pieces so they cannot move once the arc starts.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-spark/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-spark font-bold">2</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white mb-2">Set the Machine</h3>
+                                <p class="text-gray-400 text-sm">For 1/8" steel start at 19-20V and 200-250 IPM with 75% argon and 25% CO2. Confirm the stick-out sits between 1/4 and 3/8 inch before you strike.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-spark/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-spark font-bold">3</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white mb-2">Strike and Hold the Arc</h3>
+                                <p class="text-gray-400 text-sm">Start at the leading edge of the joint, hold the torch at 15-20 degrees from vertical and keep the arc length short. Watch for the puddle to form and flow in a smooth, rippling way.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-spark/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-spark font-bold">4</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white mb-2">Travel and Fill the Crater</h3>
+                                <p class="text-gray-400 text-sm">Move at a constant speed all the way along the seam, then hold the torch in place and feed a touch more wire to fill the crater before you release the trigger.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-spark/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-spark font-bold">5</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white mb-2">Inspect and Reject</h3>
+                                <p class="text-gray-400 text-sm">Let the bead cool, then run the inspection tools. A uniform bead width, clean root and no undercut means keep it. A cold-looking, spiky bead means lower the wire speed and repeat the pass.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-card bg-steel-dark rounded-lg p-6 border border-steel-light">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-spark/20 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                <span class="text-spark font-bold">6</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white mb-2">Log and Move On</h3>
+                                <p class="text-gray-400 text-sm">Note the settings that gave you a clean bead and reuse them on the next project of the same material. Once Flat Bar Joint is reliable, move to the Corner Bracket and keep your progress visible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Early mistakes -->
+            <section>
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="w-2 h-8 bg-weld-orange mr-4"></span>
+                    Mistakes That Stall New Players
+                </h2>
+
+                <div class="bg-steel-dark rounded-lg border border-steel-light overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-steel">
+                            <tr>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Mistake</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Why It Costs You</th>
+                                <th class="text-left py-4 px-6 text-weld-orange font-semibold">Fix</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-steel-light">
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Changing everything at once</td>
+                                <td class="py-4 px-6 text-gray-400">You never learn which control fixed the weld</td>
+                                <td class="py-4 px-6 text-gray-400">Change one variable per attempt</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Welding on dirty or rusty metal</td>
+                                <td class="py-4 px-6 text-gray-400">Guarantees porosity and a failed inspection</td>
+                                <td class="py-4 px-6 text-gray-400">Clean the joint area before every pass</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Skipping the fit-up check</td>
+                                <td class="py-4 px-6 text-gray-400">Misaligned parts fail blueprint dimensions</td>
+                                <td class="py-4 px-6 text-gray-400">Measure and clamp before striking an arc</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Forgetting to fill the crater</td>
+                                <td class="py-4 px-6 text-gray-400">Leaves a visible crack at the end of the bead</td>
+                                <td class="py-4 px-6 text-gray-400">Hold position and add wire on shutoff</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-6 text-gray-300">Grinding the weld without cooling it</td>
+                                <td class="py-4 px-6 text-gray-400">You cannot judge the bead and you crack the root</td>
+                                <td class="py-4 px-6 text-gray-400">Let it cool naturally, then inspect and clean up</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-gray-400 mt-8">None of these mistakes are fixed by playing more in general. They are fixed by playing one job again with one change. Fix the biggest flaw, re-weld the same piece, and only move on to the next blueprint when the result looks the same twice in a row.</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Adsterra Ads -->
+    <script async="async" data-cfasync="false" src="https://bauval.org/21/8d54961aac2526a8459397dbfc3a932f"></script>
+    <div id="container-8d54961aac2526a8459397dbfc3a932f"></div>
+
+    <script data-cfasync="false" src="https://bauval.org/14/38c7314523b6803395865ad48015c645"></script>
+
+    <script>
+      atOptions = {
+        'key' : '4986cbea18d4d7400fe2a48ccb06a215',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script src="https://bauval.org/22/4986cbea18d4d7400fe2a48ccb06a215"></script>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-steel-dark border-t border-steel-light py-8 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-6 h-6 text-weld-orange" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H2V3zm6-1H2v14h6a5 5 0 0 0 5-5V6a5 5 0 0 0-5-4z"/>
+                </svg>
+                <span class="text-weld-orange font-semibold">Welding Simulator Wiki</span>
+            </div>
+            <p class="text-gray-500 text-sm mb-2">Fan-made wiki site. Not affiliated with the official game developers.</p>
+            <p class="text-gray-600 text-xs">&copy; 2026 Welding Simulator Fan Community. All rights reserved.</p>
+        </div>
+
+    <!-- Related Articles -->
+    <section class="max-w-4xl mx-auto py-8 px-4 border-t border-amber-900">
+        <h3 class="text-xl font-bold mb-4 text-white">You Might Also Like</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+        <a href="blueprints.html" class="block p-4 bg-amber-900/30 border-amber-900 rounded hover:bg-amber-800/30 transition">
+            <span class="font-semibold text-gray-300">→ Blueprints & Projects - Welding Simulator Wiki</span>
+        </a>
+        <a href="guide.html" class="block p-4 bg-amber-900/30 border-amber-900 rounded hover:bg-amber-800/30 transition">
+            <span class="font-semibold text-gray-300">→ Welding Guide - Welding Simulator Wiki</span>
+        </a>
+        <a href="pro-tips.html" class="block p-4 bg-amber-900/30 border-amber-900 rounded hover:bg-amber-800/30 transition">
+            <span class="font-semibold text-gray-300">→ Advanced Pro Tips - Welding Simulator Wiki</span>
+        </a>
+        </div>
+    </section>
+</footer>
+</body>
+</html>
