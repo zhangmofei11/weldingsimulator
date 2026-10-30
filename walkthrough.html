@@ -115,6 +115,22 @@
       ]
     }
     </script>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <meta name="theme-color" content="#2d2d2d">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Welding Simulator Wiki">
+    <meta property="og:title" content="Welding Simulator Walkthrough - Beginner to Pro Progression Guide">
+    <meta property="og:description" content="Welding Simulator walkthrough and progression guide: shop setup, certification tiers, blueprint routing order and step-by-step first weld instructions.">
+    <meta property="og:url" content="https://weldingsimulator.site/walkthrough.html">
+    <meta property="og:image" content="https://weldingsimulator.site/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Welding Simulator Wiki">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Welding Simulator Walkthrough - Beginner to Pro Progression Guide">
+    <meta name="twitter:description" content="Welding Simulator walkthrough and progression guide: shop setup, certification tiers, blueprint routing order and step-by-step first weld instructions.">
+    <meta name="twitter:image" content="https://weldingsimulator.site/og-image.png">
 </head>
 <body class="min-h-screen text-gray-200">
     <!-- Animated Sparks Background -->
@@ -137,7 +153,7 @@
                     </svg>
                     <span class="text-2xl font-bold text-weld-orange tracking-wider" style="font-family: 'Oswald', sans-serif;">WELDING SIM</span>
                 </div>
-                <div class="hidden md:flex space-x-8">
+                <div class="hidden md:flex space-x-8 lg:flex">
                     <a href="index.html" class="nav-link text-gray-400 hover:text-spark">Home</a>
                     <a href="guide.html" class="nav-link text-gray-400 hover:text-spark">Guide</a>
                     <a href="blueprints.html" class="nav-link text-gray-400 hover:text-spark">Blueprints</a>
@@ -145,7 +161,24 @@
                     <a href="pro-tips.html" class="nav-link text-gray-400 hover:text-spark">Pro Tips</a>
                     <a href="walkthrough.html" class="nav-link text-spark font-medium">Walkthrough</a>
                 </div>
+                            <button id="mobile-menu-btn" class="lg:hidden p-2 -mr-2 rounded-lg transition-all" style="color:#d1d5db" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                </button></div>        <div id="mobile-menu" class="hidden lg:hidden fixed inset-0 z-[9999] overflow-y-auto" style="background-color:rgba(8,8,12,0.98)">
+            <div class="flex items-center justify-between px-4 py-4" style="border-bottom:1px solid rgba(255,255,255,0.08)">
+                <span style="color:#9ca3af;font-size:13px;letter-spacing:0.08em;text-transform:uppercase">Menu</span>
+                <button id="mobile-menu-close" class="p-2 -mr-2 rounded-lg transition-all" style="color:#d1d5db" aria-label="Close menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
             </div>
+            <div class="px-4 py-3 space-y-1">
+                <a href="index.html" class="block px-4 py-3 rounded-lg transition-all" style="color:#d1d5db">Home</a>
+                <a href="guide.html" class="block px-4 py-3 rounded-lg transition-all" style="color:#d1d5db">Guide</a>
+                <a href="blueprints.html" class="block px-4 py-3 rounded-lg transition-all" style="color:#d1d5db">Blueprints</a>
+                <a href="tips.html" class="block px-4 py-3 rounded-lg transition-all" style="color:#d1d5db">Tips</a>
+                <a href="pro-tips.html" class="block px-4 py-3 rounded-lg transition-all" style="color:#d1d5db">Pro Tips</a>
+                <a href="walkthrough.html" class="block px-4 py-3 rounded-lg transition-all font-bold" style="color:#fff;background-color:rgba(255,255,255,0.08)">Walkthrough</a>
+            </div>
+        </div>
         </div>
     </nav>
 
@@ -496,5 +529,23 @@
         </div>
     </section>
 </footer>
+    <script>
+    (function () {
+      var btn = document.getElementById('mobile-menu-btn');
+      var menu = document.getElementById('mobile-menu');
+      var close = document.getElementById('mobile-menu-close');
+      if (!btn || !menu) return;
+      function setOpen(open) {
+        menu.classList.toggle('hidden', !open);
+        btn.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      btn.addEventListener('click', function () { setOpen(menu.classList.contains('hidden')); });
+      if (close) close.addEventListener('click', function () { setOpen(false); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !menu.classList.contains('hidden')) setOpen(false);
+      });
+    })();
+    </script>
 </body>
 </html>
